@@ -1,0 +1,1 @@
+echo "hello goddy" > /export/logs/sdkserver/tmp2.log

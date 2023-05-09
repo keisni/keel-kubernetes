@@ -1,0 +1,14 @@
+{{- range .Values.keel.apps }}
+{{- if not .disabled }}
+{{- $args := (dict "app" . "Values" $.Values "Release" $.Release "Files" $.Files) }}
+{{ include "keel.configmap" $args }}
+{{ include "keel.statefulset" $args }}
+{{ include "keel.service" $args }}
+{{- if .crontabPath }}
+{{ include "keel.daemonset" $args }}
+{{- end }}
+{{- if .ingress }}
+{{ include "keel.ingress" $args }}
+{{- end }}
+{{- end }}
+{{- end }}

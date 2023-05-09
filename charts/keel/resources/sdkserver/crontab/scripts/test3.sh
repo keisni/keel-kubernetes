@@ -1,0 +1,1 @@
+echo "hello kids" > /export/logs/sdkserver/tmp3.log

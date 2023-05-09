@@ -1,0 +1,1 @@
+ls -l /export/logs/sdkserver/program > /export/logs/sdkserver/tmp.log

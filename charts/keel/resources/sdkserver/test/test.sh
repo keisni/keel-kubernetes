@@ -1,0 +1,1 @@
+curl --location "http://$POD_IP:8080/api/validate?appid=iprojectios&username=10542&token=2nGbR9ui1fD3v3uzKhMaQMTNYkoXhWTAXqYU6FNrupksSU45ZL1EQriizhzuMRXkwi6VWR6VmfFnyhzGh41j9woR&loginip=1984621578&version=1.0&device_uuid=5688225dc53eb695df7eac4c400505a8e560d45e"

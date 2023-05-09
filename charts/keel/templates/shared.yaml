@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keel-shared
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "resources/shared/*").AsConfig | nindent 2 }}
