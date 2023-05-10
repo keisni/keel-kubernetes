@@ -48,6 +48,10 @@ spec:
         - name: {{ .app.name }}
           image: "{{ .Values.keel.image.repository }}/{{ .app.name }}:{{ default "latest" .app.tag }}"
           imagePullPolicy: {{ default "Always" .Values.keel.image.pullPolicy }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/local/tomcat/bin/catalina.sh stop 20"]
           env:
           - name: KEEL_VERSION
             value: {{ include "keel.version" . | quote }}
