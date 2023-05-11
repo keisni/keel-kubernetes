@@ -7,6 +7,7 @@ keel:
     name: nginx
   apps:
   - name: sdkserver
+    version: v5297.1
     tag: v5297
     replicas: 2
     resources:
@@ -23,12 +24,19 @@ keel:
       host: sdkserver.zulong.com
       secret: keel-secret
       port: 8080
-      header:
-        - "Host: $Host"
-        - "X-Forwarded-For: $http_x_forwarded_for"
-      allow:
-        - 10.236.254.0/24
-      deny: []
+      rules:
+        - path:
+           - "/"
+          header:
+            - "X-Forwarded-For: $http_x_forwarded_for"
+          allow:
+            - 10.236.254.0/24
+          deny: []
+        - path: ["/images/", "/js/", "/css/"]
+          disableAccessLog: true
+        - path: ["/api/validate"]
+          exactMatch: true
+          disableAccessLog: true
     log:
       hostPath: /data/keel/sdkserver
       path: /export/logs/

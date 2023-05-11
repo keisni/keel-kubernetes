@@ -14,7 +14,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: sdkserver-config-0-v5297
+  name: sdkserver-config-0-v5297.1
   namespace: keel-test
 binaryData:
   config.xml: |
@@ -24,7 +24,7 @@ binaryData:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: sdkserver-config-1-v5297
+  name: sdkserver-config-1-v5297.1
   namespace: keel-test
 binaryData:
   config.xml: |
@@ -34,7 +34,7 @@ binaryData:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: sdkserver-config-base-v5297
+  name: sdkserver-config-base-v5297.1
   namespace: keel-test
 binaryData:
   accountdb.xml: |
@@ -307,9 +307,13 @@ spec:
         - name: sdkserver
           image: "harbor.zulong.com/keel-images/sdkserver:v5297"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/local/tomcat/bin/catalina.sh stop 20"]
           env:
           - name: KEEL_VERSION
-            value: "v5297"
+            value: "v5297.1"
           - name: POD_IP
             valueFrom:
               fieldRef:
@@ -366,13 +370,13 @@ spec:
             name: sdkserver-update-wait
         - name: config-0
           configMap:
-            name: sdkserver-config-0-v5297
+            name: sdkserver-config-0-v5297.1
         - name: config-1
           configMap:
-            name: sdkserver-config-1-v5297
+            name: sdkserver-config-1-v5297.1
         - name: config-base
           configMap:
-            name: sdkserver-config-base-v5297
+            name: sdkserver-config-base-v5297.1
 ---
 # Source: keel-helm/templates/keel.yaml
 ---
@@ -412,6 +416,10 @@ spec:
         - name: gmsp
           image: "harbor.zulong.com/keel-images/gmsp:v5316"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/local/tomcat/bin/catalina.sh stop 20"]
           env:
           - name: KEEL_VERSION
             value: "v5316"
@@ -465,12 +473,9 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: sdkserver
+  name: sdkserver-0
   namespace: keel-test
   annotations:
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      more_set_headers "Host: $Host";
-      more_set_headers "X-Forwarded-For: $http_x_forwarded_for";
     nginx.ingress.kubernetes.io/whitelist-source-range: "10.236.254.0/24"
 spec:
   ingressClassName: nginx
@@ -485,7 +490,72 @@ spec:
         - path: /
           pathType: Prefix
           backend:
-            # This assumes http-svc exists and routes to healthy endpoints
+            service:
+              name: sdkserver
+              port:
+                number: 8080
+---
+# Source: keel-helm/templates/keel.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sdkserver-1
+  namespace: keel-test
+  annotations:
+    nginx.ingress.kubernetes.io/enable-access-log: "false"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+      - sdkserver.zulong.com
+      secretName: keel-secret
+  rules:
+    - host: sdkserver.zulong.com
+      http:
+        paths:
+        - path: /images/
+          pathType: Prefix
+          backend:
+            service:
+              name: sdkserver
+              port:
+                number: 8080
+        - path: /js/
+          pathType: Prefix
+          backend:
+            service:
+              name: sdkserver
+              port:
+                number: 8080
+        - path: /css/
+          pathType: Prefix
+          backend:
+            service:
+              name: sdkserver
+              port:
+                number: 8080
+---
+# Source: keel-helm/templates/keel.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sdkserver-2
+  namespace: keel-test
+  annotations:
+    nginx.ingress.kubernetes.io/enable-access-log: "false"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+      - sdkserver.zulong.com
+      secretName: keel-secret
+  rules:
+    - host: sdkserver.zulong.com
+      http:
+        paths:
+        - path: /api/validate
+          pathType: Exact
+          backend:
             service:
               name: sdkserver
               port:

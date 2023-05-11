@@ -1,41 +1,49 @@
 {{- define "keel.ingress" -}}
+{{- $dot := . }}
+{{- range $idx, $rule := .app.ingress.rules }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .app.name }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ printf "%s-%d" $dot.app.name (int $idx) }}
+  namespace: {{ $dot.Release.Namespace }}
   annotations:
-{{- if .app.ingress.header }}
+{{- if $rule.disableAccessLog }}
+    nginx.ingress.kubernetes.io/enable-access-log: "false"
+{{- end }}
+{{- if $dot.app.ingress.header }}
     nginx.ingress.kubernetes.io/configuration-snippet: |
-{{- range $h := .app.ingress.header }}
+{{- range $h := $rule.header }}
       more_set_headers {{ $h | quote }};
 {{- end}}
 {{- end }}
-{{- if .app.ingress.allow }}
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," .app.ingress.allow | quote }}
+{{- if $rule.allow }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," $rule.allow | quote }}
 {{- end }}
-{{- if .app.ingress.deny }}
-    nginx.ingress.kubernetes.io/denylist-source-range: {{ join "," .app.ingress.deny | quote }}
+{{- if $rule.deny }}
+    nginx.ingress.kubernetes.io/denylist-source-range: {{ join "," $rule.deny | quote }}
 {{- end }}
 spec:
-  ingressClassName: {{ coalesce .app.ingress.name .Values.keel.ingress.name "nginx" }}
-{{- if .app.ingress.secret }}
+  ingressClassName: {{ coalesce $dot.app.ingress.name $dot.Values.keel.ingress.name "nginx" }}
+{{- if $dot.app.ingress.secret }}
   tls:
     - hosts:
-      - {{ .app.ingress.host}}
-      secretName: {{ .app.ingress.secret }}
+      - {{ $dot.app.ingress.host}}
+      secretName: {{ $dot.app.ingress.secret }}
 {{- end }}
   rules:
-    - host: {{ .app.ingress.host}}
+    - host: {{ $dot.app.ingress.host}}
       http:
         paths:
-        - path: /
-          pathType: Prefix
+{{- $exact := $rule.exactMatch }}
+{{- range $rule.path }}
+        - path: {{ . }}
+          pathType: {{ if $exact }}Exact{{ else }}Prefix{{ end }}
           backend:
-            # This assumes http-svc exists and routes to healthy endpoints
             service:
-              name: {{ .app.name }}
+              name: {{ $dot.app.name }}
               port:
-                number: {{ .app.ingress.port }}
+                number: {{ $dot.app.ingress.port }}
+{{- end}}
+{{- end}}
 {{- end }}
