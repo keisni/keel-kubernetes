@@ -11,11 +11,8 @@ metadata:
 {{- if $rule.disableAccessLog }}
     nginx.ingress.kubernetes.io/enable-access-log: "false"
 {{- end }}
-{{- if $dot.app.ingress.header }}
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-{{- range $h := $rule.header }}
-      more_set_headers {{ $h | quote }};
-{{- end}}
+{{- if $rule.snippet }}
+    nginx.ingress.kubernetes.io/configuration-snippet: {{ toYaml $rule.snippet | indent 4}}
 {{- end }}
 {{- if $rule.allow }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," $rule.allow | quote }}

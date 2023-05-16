@@ -27,13 +27,14 @@ keel:
       rules:
         - path:
            - "/"
-          header:
-            - "X-Forwarded-For: $http_x_forwarded_for"
           allow:
             - 10.236.254.0/24
           deny: []
         - path: ["/images/", "/js/", "/css/"]
           disableAccessLog: true
+          snippet: |
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_redirect http:// https://;
         - path: ["/api/validate"]
           exactMatch: true
           disableAccessLog: true
