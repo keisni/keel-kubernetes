@@ -1,0 +1,95 @@
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: keel-rabbitmq-local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: keel-rabbitmq-pv
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: keel-rabbitmq-local-storage
+  local:
+    path: /data/keel/rabbitmq
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - k8s-node1
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: keel-rabbitmq
+  namespace: keel-test
+spec:
+  image: harbor.zulong.com/common-images/rabbitmq:3.11
+  imagePullSecrets:
+    - name: zulong-key
+  service:
+    type: NodePort
+  replicas: 1
+  persistence:
+    storageClassName: keel-rabbitmq-local-storage
+    storage: 10Gi
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  rabbitmq:
+    additionalConfig:     |
+      total_memory_available_override_value = 1600Mi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: keel-rabbitmq-secret
+  namespace: keel-test
+type: Opaque
+stringData:
+  username: zulongrc
+  password: Zulong@123.com
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: User
+metadata:
+  name: keel-rabbitmq-user
+  namespace: keel-test
+spec:
+  tags:
+    - management
+    - policymaker
+    - monitoring
+    - administrator
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+  importCredentialsSecret:
+    name: keel-rabbitmq-secret
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: Permission
+metadata:
+  name: keel-rabbitmq-user-permission
+  namespace: keel-test
+spec:
+  vhost: "/"
+  user: zulongrc
+  permissions:
+    write: ".*"
+    configure: ".*"
+    read: ".*"
+  rabbitmqClusterReference:
+    name: keel-rabbitmq

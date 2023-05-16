@@ -12,7 +12,7 @@ metadata:
     nginx.ingress.kubernetes.io/enable-access-log: "false"
 {{- end }}
 {{- if $rule.snippet }}
-    nginx.ingress.kubernetes.io/configuration-snippet: {{ toYaml $rule.snippet | indent 4}}
+    nginx.ingress.kubernetes.io/configuration-snippet: {{ $rule.snippet | quote }}
 {{- end }}
 {{- if $rule.allow }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," $rule.allow | quote }}

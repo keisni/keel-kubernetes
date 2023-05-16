@@ -3,8 +3,72 @@ keel:
     repository: harbor.zulong.com/keel-images
     pullSecrets:
       - name: "zulong-key"
+  storage:
+    local: true
+    className: ""
   ingress:
     name: nginx
+  rabbitmq:
+    cluster:
+      enabled: false
+      name: keel-rabbitmq
+      image: harbor.zulong.com/common-images/rabbitmq:3.11
+      serviceType: NodePort
+      replicas: 1
+      storage: 10Gi
+      resources:
+        cpu: 1000m
+        memory: 2Gi
+      additionalConfig: |
+        total_memory_available_override_value = 1600Mi
+      username: zulongrc
+      password: Zulong@123.com
+    exchange:
+      - name: direct_SDK
+        type: direct
+        binding:
+          - queue: charge_SDK
+            key: charge_SDK
+          - queue: charge_SDK
+            key: login_SDK
+          - queue: checkreceipt_SDK
+            key: checkreceipt_SDK
+          - queue: login_SDK
+            key:
+          - queue: login_SDK
+            key: login
+          - queue: login_SDK
+            key: login_SDK
+          - queue: login_sdk_to_rc
+            key: login
+          - queue: register_SDK
+            key: register_SDK
+          - queue: sendalertinfo_SDK
+            key: sendalertinfo_SDK
+          - queue: test_queue
+            key: test
+          - queue: voided_slave
+            key: voided_slave
+      - name: qrcode_login_fanout_SDK
+        type: fanout
+      - name: qrcode_pay_fanout_SDK
+        type: fanout
+        binding:
+          - queue: qrcode_pay_SDK1
+          - queue: qrcode_pay_SDK2
+    queue:
+      - name: login_SDK
+      - name: login_sdk_to_rc
+      - name: charge_SDK
+      - name: checkreceipt_SDK
+      - name: sendalertinfo_SDK
+      - name: register_SDK
+      - name: qrcode_login_SDK
+      - name: qrcode_pay_SDK
+      - name: qrcode_pay_SDK1
+      - name: qrcode_pay_SDK2
+      - name: test_queue
+      - name: voided_slave
   apps:
   - name: sdkserver
     version: v5297.1
@@ -65,3 +129,7 @@ keel:
       path: /export/logs/
     configPath: /usr/local/tomcat/gmsp_config
     update: {}
+harbor:
+  zulong:
+    com/common-images/rabbitmq:3:
+      11:

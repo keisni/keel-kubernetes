@@ -1,0 +1,158 @@
+{{- $clusterName := .Values.keel.rabbitmq.cluster.name | lower | replace "_" "-" }}
+{{- if .Values.keel.rabbitmq.cluster.enabled }}
+{{- if .Values.keel.storage.local }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: keel-rabbitmq-pv
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: keel-rabbitmq-local-storage
+  local:
+    path: /data/keel/rabbitmq
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - k8s-node1
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: keel-rabbitmq-local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+{{- end }}
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $clusterName }}-secret
+  namespace: {{ .Release.Namespace }}
+type: Opaque
+stringData:
+  username: {{ .Values.keel.rabbitmq.cluster.username }}
+  password: {{ .Values.keel.rabbitmq.cluster.password }}
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: User
+metadata:
+  name: {{ $clusterName }}-user
+  namespace: {{ .Release.Namespace }}
+spec:
+  tags:
+    - management
+    - policymaker
+    - monitoring
+    - administrator
+  rabbitmqClusterReference:
+    name: {{ $clusterName }}
+  importCredentialsSecret:
+    name: {{ $clusterName }}-secret
+---
+
+apiVersion: rabbitmq.com/v1beta1
+kind: Permission
+metadata:
+  name: {{ $clusterName }}-user-permission
+  namespace: {{ .Release.Namespace }}
+spec:
+  vhost: "/"
+  user: {{ .Values.keel.rabbitmq.cluster.username }}
+  permissions:
+    write: ".*"
+    configure: ".*"
+    read: ".*"
+  rabbitmqClusterReference:
+    name: {{ $clusterName }}
+---
+
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: {{ $clusterName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  image: {{ .Values.keel.rabbitmq.cluster.image }}
+{{- if .Values.keel.image.pullSecrets }}
+  imagePullSecrets:
+{{ toYaml .Values.keel.image.pullSecrets | indent 6 }}
+{{- end }}
+  service:
+    type: {{ default "ClusterIP" .Values.keel.rabbitmq.cluster.serviceType}}
+  replicas: {{ default 1 .Values.keel.rabbitmq.cluster.replicas }}
+  persistence:
+    storageClassName: {{ if .Values.keel.storage.local }}keel-rabbitmq-local-storage{{ else }}{{ .Values.keel.storage.className}}{{ end }}
+    storage: {{ .Values.keel.rabbitmq.cluster.storage }}
+{{- if .Values.keel.rabbitmq.cluster.resources }}
+  resources:
+    limits:
+{{ toYaml .Values.keel.rabbitmq.cluster.resources | indent 6 }}
+{{- end }}
+  rabbitmq:
+{{- if .Values.keel.rabbitmq.cluster.additionalConfig }}
+    additionalConfig: {{ toYaml .Values.keel.rabbitmq.cluster.additionalConfig | indent 4 }}
+{{- end }}
+---
+{{- end }}
+
+{{- $dot := . }}
+{{- range .Values.keel.rabbitmq.queue }}
+apiVersion: rabbitmq.com/v1beta1
+kind: Queue
+metadata:
+  name: {{ .name | lower | replace "_" "-" }}
+  namespace: {{ $dot.Release.Namespace }}
+spec:
+  name: {{ .name }}
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: {{ $clusterName }}
+---
+{{- end }}
+
+{{- range .Values.keel.rabbitmq.exchange }}
+apiVersion: rabbitmq.com/v1beta1
+kind: Exchange
+metadata:
+  name: {{ .name | lower | replace "_" "-" }}
+  namespace: {{ $dot.Release.Namespace }}
+spec:
+  name: {{ .name }}
+  type: {{ .type }}
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: {{ $clusterName }}
+---
+
+{{- $exg := . }}
+{{- range $idx, $bind := .binding }}
+apiVersion: rabbitmq.com/v1beta1
+kind: Binding
+metadata:
+  name: {{ printf "%s-%d" ($exg.name | lower | replace "_" "-" ) (int $idx) }}
+  namespace: {{ $dot.Release.Namespace }}
+spec:
+  source: {{ $exg.name }}
+  destination: {{ .queue }}
+  destinationType: queue
+{{- if .key }}
+  routingKey: {{ .key }}
+{{- end }}
+  rabbitmqClusterReference:
+    name: {{ $clusterName }}
+---
+{{- end }}
+
+{{- end }}
