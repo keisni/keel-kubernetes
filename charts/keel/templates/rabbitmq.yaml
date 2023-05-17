@@ -7,14 +7,14 @@ metadata:
   name: keel-rabbitmq-pv
 spec:
   capacity:
-    storage: 10Gi
+    storage: {{ .Values.keel.rabbitmq.cluster.storage.size }}
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Delete
   storageClassName: keel-rabbitmq-local-storage
   local:
-    path: /data/keel/rabbitmq
+    path: {{ .Values.keel.rabbitmq.cluster.storage.local.path }}
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -22,7 +22,7 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - k8s-node1
+                - {{ .Values.keel.rabbitmq.cluster.storage.local.node }}
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -92,7 +92,7 @@ spec:
   replicas: {{ default 1 .Values.keel.rabbitmq.cluster.replicas }}
   persistence:
     storageClassName: {{ if .Values.keel.storage.local }}keel-rabbitmq-local-storage{{ else }}{{ .Values.keel.storage.className}}{{ end }}
-    storage: {{ .Values.keel.rabbitmq.cluster.storage }}
+    storage: {{ .Values.keel.rabbitmq.cluster.storage.size }}
 {{- if .Values.keel.rabbitmq.cluster.resources }}
   resources:
     limits:

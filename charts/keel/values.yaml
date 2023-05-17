@@ -10,12 +10,16 @@ keel:
     name: nginx
   rabbitmq:
     cluster:
-      enabled:
+      enabled: false
       name: keel-rabbitmq
       image: harbor.zulong.com/common-images/rabbitmq:3.11
       serviceType: NodePort
       replicas: 1
-      storage: 10Gi
+      storage:
+        size: 10Gi
+        local:
+          path: /data/keel/rabbitmq
+          node: k8s-node1
       resources:
         cpu: 1000m
         memory: 2Gi
@@ -121,12 +125,20 @@ keel:
       hostPath: /data/keel/riskcontrol
       path: /export/logs/RiskControl
     configPath: /etc/rcserver_config
+  - name: sdkslave
+    tag: 5148
+    replicas: 1
+    resources:
+      memory: 4G
+    log:
+      hostPath: /data/keel/sdkslave
+      path: /export/logs/sdkslave
+    configPath: /etc/sdkslave_config
   - name: gmsp
     replicas: 1
-    tag: v5316
+    tag: 5343
     resources:
       memory: 1024M
-    javaOpts: "-Xmx1024m -Xms1024m"
     service:
       type: NodePort
       ports:

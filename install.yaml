@@ -1,4 +1,15 @@
 ---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: keel-rabbitmq-secret
+  namespace: keel-test
+type: Opaque
+stringData:
+  username: zulongrc
+  password: Zulong@123.com
+---
 # Source: keel-helm/templates/secret.yaml
 apiVersion: v1
 kind: Secret
@@ -118,6 +129,27 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  name: sdkslave-config-base-5148
+  namespace: keel-test
+binaryData:
+  accountdb.xml: |
+    PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iR0JLIj8+Cjw/eG1sLXN0eWxlc2hlZXQgdHlwZT0idGV4dC94c2wiIGhyZWY9InRhYmxlLnhzbCI/PgoKPGFwcGxpY2F0aW9uIGRlYnVnPSJmYWxzZSIgYmVhbnM9ImNvbS5hY3MuYWNjb3VudCIgYmVhbmJhc2U9InNyYy9jb20vYWNzL2FjY291bnQiIGNvdW50ZXJob2xkZXJuYW1lPSJzdG9yYWdlIj4KCjxkcml2ZXIgbmFtZT0iY29tLm15c3FsLmpkYmMuRHJpdmVyIiAvPgoKPCEtLSAxMC4yMzYuMTAwLjI4IC0tPgo8Y29ubmVjdGlvbiBuYW1lPSJhdXRoMCIgcG9vbHNpemU9IjMiIHVybD0iamRiYzpteXNxbDovLzEwLjIzNi4yNTQuMjAyOjMzMDYvYWNjb3VudGRiX3Rlc3QiIHVzZXJuYW1lPSJhY3NwYXNzcG9ydCIgcGFzc3dvcmQ9IjEyM3M1Ni4uIi8+Cgo8Y2FjaGUgbmFtZT0iYWNjb3VudF9ieV91c2VyaWQiIHR5cGU9InJlZmVyZW5jZSIgaXA9IjIyNi4xLjEuMSIgcG9ydD0iNDQ0NCIgbG9jYWxfaXA9IjEyNy4wLjAuMSIgc2l6ZT0iMjYyMTQ0IiBwYXJ0aXRpb249IjAiLz4KPGNhY2hlIG5hbWU9ImFjY291bnRfYnlfbmFtZSIgdHlwZT0icmVmZXJlbmNlIiBpcD0iMjI2LjEuMS4xIiBwb3J0PSI0NDQ1IiBsb2NhbF9pcD0iMTI3LjAuMC4xIiBzaXplPSIyNjIxNDQiIHBhcnRpdGlvbj0iMCIvPgo8Y2FjaGUgbmFtZT0iYmlkc19ieV9iaWQiIHR5cGU9InJlZmVyZW5jZSIgaXA9IjIyNi4xLjEuNSIgcG9ydD0iNDQ0OSIgbG9jYWxfaXA9IjEyNy4wLjAuMSIgc2l6ZT0iMjYyMTQ0IiBwYXJ0aXRpb249IjAiLz4KPGNhY2hlIG5hbWU9ImFjY291bnRfYnlfY2VsbHBob25lIiB0eXBlPSJyZWZlcmVuY2UiIGlwPSIyMjYuMS4xLjEiIHBvcnQ9IjQ0NDYiIGxvY2FsX2lwPSIxMjcuMC4wLjEiIHNpemU9IjI2MjE0NCIgcGFydGl0aW9uPSIwIiBpc29wZW49InRydWUiLz4KPGNhY2hlIG5hbWU9ImFjY291bnRfYnlfZW1haWwiIHR5cGU9InJlZmVyZW5jZSIgaXA9IjIyNi4xLjEuMSIgcG9ydD0iNDQ0NyIgbG9jYWxfaXA9IjEyNy4wLjAuMSIgc2l6ZT0iMjYyMTQ0IiBwYXJ0aXRpb249IjAiIGlzb3Blbj0idHJ1ZSIvPgo8Y2FjaGUgbmFtZT0iZ2FtZXVzZXJfYnlfYXBwaWRhbmRvcGVuaWQiIHR5cGU9InJlZmVyZW5jZSIgaXA9IjIyNi4xLjEuNiIgcG9ydD0iNDQ1MCIgbG9jYWxfaXA9IjEyNy4wLjAuMSIgc2l6ZT0iMjYyMTQ0IiBwYXJ0aXRpb249IjAiLz4KPGNhY2hlIG5hbWU9InRoaXJkYWNjb3VudF9ieV9hcHBpZGFuZG9wZW5pZCIgdHlwZT0icmVmZXJlbmNlIiBpcD0iMjI2LjEuMS43IiBwb3J0PSI0NDUxIiBsb2NhbF9pcD0iMTI3LjAuMC4xIiBzaXplPSIyNjIxNDQiIHBhcnRpdGlvbj0iMCIvPgoKPC9hcHBsaWNhdGlvbj4K
+  config.xml: |
+    PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iR0IyMzEyIj8+DQo8Y29uZmlndXJhdGlvbj4NCg0KCTwhLS0gtszQxbf+zvHF5NbDIC0tPg0KCTxzZW5kc21zPg0KCQk8IS0tILfDzsq1xLbM0MW3/s7xtdjWtyAtLT4NCgkJPHVybD5odHRwOi8vMTAuMjM2LjEwMC4yMDE6ODA4MC9zbXNzZXJ2aWNlL2FwaS9zZW5kX3Ntc2NhcHRjaGE8L3VybD4NCgkJPCEtLSC199PDt72x6sq2IC0tPg0KCQk8Y2xpZW50aWQ+MTAwPC9jbGllbnRpZD4NCgkJPCEtLSC2zNDFxNrI3bHgwusgLS0+DQoJCTxlbmNvZGU+R0JLPC9lbmNvZGU+DQoJCTwhLS0gt6LLzcqxvOS0sCAtLT4NCgkJPHdpbmRvdz42MDwvd2luZG93Pg0KCQk8IS0tILeiy820zsr9IC0tPg0KCQk8Y291bnQ+MTwvY291bnQ+DQoJCTwhLS0gway908qxvOQgLS0+DQoJCTxjb25uZWN0VGltZW91dD41MDAwPC9jb25uZWN0VGltZW91dD4NCgkJPCEtLSDBrL3TyrG85CAtLT4NCgkJPHNvVGltZW91dD41MDAwPC9zb1RpbWVvdXQ+DQoJPC9zZW5kc21zPg0KDQoJPCEtLSDTys/kt/7O8cXk1sMgLS0+DQoJPHNlbmRlbWFpbD4NCgkJPCEtLSC3w87KtcTTys/kt/7O8bXY1rcgLS0+DQoJCTx1cmw+aHR0cDovLzEwLjIzNi4xMDAuMjAxOjcwODAvbWFpbHNlcnZpY2UvZW1haWwvc2VuZDwvdXJsPg0KCQk8IS0tILX308O3vbHqyrYgLS0+DQoJCTxjbGllbnRpZD4xMDA8L2NsaWVudGlkPg0KCQk8IS0tILbM0MXE2sjdseDC6yAtLT4NCgkJPGVuY29kZT5VVEYtODwvZW5jb2RlPg0KCQk8IS0tILeiy83KsbzktLAgLS0+DQoJCTx3aW5kb3c+NjA8L3dpbmRvdz4NCgkJPCEtLSC3osvNtM7K/SAtLT4NCgkJPGNvdW50PjI8L2NvdW50Pg0KCQk8IS0tIMGsvdPKsbzkIC0tPg0KCQk8Y29ubmVjdFRpbWVvdXQ+NTAwMDwvY29ubmVjdFRpbWVvdXQ+DQoJCTwhLS0gway908qxvOQgLS0+DQoJCTxzb1RpbWVvdXQ+NTAwMDwvc29UaW1lb3V0Pg0KCQk8IS0tIGNhbXBhaWduSWQgLS0+DQoJCTxjYW1wYWlnbklkPjI8L2NhbXBhaWduSWQ+DQoJCTwhLS0gbWFpbGluZ0lkIC0tPg0KCQk8bWFpbGluZ0lkPjIwPC9tYWlsaW5nSWQ+DQoJCTwhLS0gyKjW2CAtLT4NCgkJPGF1dGhvcml0eT4zPC9hdXRob3JpdHk+DQoJCTwhLS0gZ3JvdXBJZCAtLT4NCgkJPGdyb3VwSWQ+NzA8L2dyb3VwSWQ+DQoJPC9zZW5kZW1haWw+DQoNCgk8IS0tIFJlZGlzxeTWwyAtLT4NCgk8cmVkaXM+DQoJCTxob3N0PjEwLjIzNi4yNTQuMjAxPC9ob3N0Pg0KCQk8cG9ydD42Mzc5PC9wb3J0Pg0KCQk8bWF4YWN0aXZlPjU8L21heGFjdGl2ZT4NCgkJPG1heGlkbGU+NTwvbWF4aWRsZT4NCgkJPG1heHdhaXQ+MTAwMDwvbWF4d2FpdD4NCgkJPHRpbWVvdXQ+MTAwMDwvdGltZW91dD4NCgkJPHBhc3N3b3JkPktlZUwxMjNzNTYuLjwvcGFzc3dvcmQ+DQoJPC9yZWRpcz4NCg0KCTwhLS0g1qe4trGmxeTWwyAtLT4NCgk8YWxpcGF5Pg0KCQk8c2VydmljZT5tb2JpbGUuc2VjdXJpdHlwYXkucGF5PC9zZXJ2aWNlPg0KCQk8cGFydG5lcj4yMDg4MDIxNjQ4MjE0NDY0PC9wYXJ0bmVyPg0KCQk8aW5wdXRfY2hhcnNldD51dGYtODwvaW5wdXRfY2hhcnNldD4NCgkJPHNpZ25fdHlwZT5SU0E8L3NpZ25fdHlwZT4NCgkJPHBheW1lbnRfdHlwZT4xPC9wYXltZW50X3R5cGU+DQoJCTxpdF9iX3BheT4zMG08L2l0X2JfcGF5Pg0KCQk8c2VsbGVyX2lkPnp1bG9uZ2Z1bkBwd3JkLmNvbTwvc2VsbGVyX2lkPg0KCQk8bXlfcHJpdmF0ZT5NSUlDZUFJQkFEQU5CZ2txaGtpRzl3MEJBUUVGQUFTQ0FtSXdnZ0plQWdFQUFvR0JBTkk1RDRwM1VVWCtjQ0dwT3RxRUpBZllZVzZhczJXVTRBc2ZvSUN3bko5aG1oZWpoNGtrazkweXlCNFBCSENJL3VTRWhZSjRjNG9qdWN2Q3IwWmN2UlF1VWYva3E0dHVVNGRBc2lPS0xHNkcvTHorSjBqMzBQeldELzMxTnoxL2VlbzNPWjB0Ykx4cDF2RTdScnByMjVqOEQzSVlDSkJUcGpkckk0SkdRbmFqQWdNQkFBRUNnWUVBd1hkRDV5Rmh5WEdjamszbzNOc0pNYk1nRDZNTmdHbmZPajF6LzVzSnVPQWc2S3BWZkpBT0NGN0lybWtSbytOZitMeEJCazZGdmxhY2tYbnN4bXRva1hPcFFqR1JkYnZhOVlTLzlJcTVFejZTVXU1SkhramVZa2ViTDlicmFJNENlYkQrQlo0UWtLZTBycmZ5ZHNEbGpzUUM2c3FuaXV6WHJ0VjAyQTRaak1FQ1FRRHhzdmkrYkNrOFVQS2tQdG5JZVR3RktaNFY3UjNDcjJiejhtVGhLRkNHT3p2VXVSTWVJVCtuRXk1VTBBRzRyd0w1aGt2L0FGWGgyamJkeis2ZE8zMWhBa0VBM3FsUk9LbHNXZVd0anJSZVFDVmdDUSt5U3BvejliWCtvVEtvUzJXNVpITGNRd2pQdUhOOUtzaW9YNkNPaVpvYXlPSTZ2OHhQWk5QSW8ycVZqYllPZ3dKQUEzdEFlZjIwMmxtUUpTMkNsWkNwZkttTXpXUU0rYkR0R3JaekhZc25IY2ZjcE1QRnNybG40VkExYXFOVVl3U2lWbFhJNG5OdXlVSUxhRWFHZVYxU0FRSkJBSlVXdGtYRVc4S040WHBPRjFYSU1OZWdaUGRDN1V1M0Fyb1kyMHN3MzhQOGpMTnQ4UGhHakNiYm1MSC9KYkhKTitvT1lOd1FCNUV4cFlTV1YzRTkxOVVDUVFDaE5EQnlIaTFOY2dwMkl4S3E2a05mNkYwaCtFQzF6ejJOYnhiQ3ArNWNhWVB0YUU4bEpVMERab0htV2VVN2h2RW0ydDNrWmVuc25idVF0K1hGeC9PTQ0KCQk8L215X3ByaXZhdGU+DQoJCTxhbGlfcHVibGljPk1JR2ZNQTBHQ1NxR1NJYjNEUUVCQVFVQUE0R05BRENCaVFLQmdRQ254ai85cXdWZmdvVWgveTJXODlMNkJrUkFGbGpoTmhnUGR5UHVCVjY0YmZRTk4xUGpiQ3prSU02cVJkS0JvTFBYbUtLTWlGWW5rZDZyQW9wcmloMy9QclFFQi9Wc1c4T29NOGZ4bjY3VURZdXlCVHFBMjNNTUw5cTEraWxJWndCQzJBUTJVQlZPckZYZkZsNzVwNi9CNUtzaU5HOXpwZ21MQ1VZdUxreHBMUUlEQVFBQg0KCQk8L2FsaV9wdWJsaWM+DQoJCTx2ZXJpZnlfdXJsPmh0dHBzOi8vbWFwaS5hbGlwYXkuY29tL2dhdGV3YXkuZG8/c2VydmljZT1ub3RpZnlfdmVyaWZ5DQoJCTwvdmVyaWZ5X3VybD4NCgkJPG5vdGlmeV91cmw+aHR0cDovL3Nka3NlcnZlci5vYS56dWxvbmcuY29tL3Nka3NlcnZlci9hcGkvYWxpcGF5X2NhbGxiYWNrDQoJCTwvbm90aWZ5X3VybD4NCgk8L2FsaXBheT4NCg0KCTwhLS0gzqLQxcXk1sMgLS0+DQoJPHd4cGF5Pg0KCQk8YXBwaWRfbWFwPg0KCQkJPHpsc2RrX2FwcGlkPmRmYmJhbmRyb2lkPC96bHNka19hcHBpZD4NCgkJCTx3eHBheV9hcHBpZD53eDU5OGJmYTk4OGNiYjc2NzA8L3d4cGF5X2FwcGlkPg0KCQk8L2FwcGlkX21hcD4NCgkJPGFwcGlkX21hcD4NCgkJCTx6bHNka19hcHBpZD5kZmJiamI8L3psc2RrX2FwcGlkPg0KCQkJPHd4cGF5X2FwcGlkPnd4NTk4YmZhOTg4Y2JiNzY3MDwvd3hwYXlfYXBwaWQ+DQoJCTwvYXBwaWRfbWFwPg0KCQk8d3hwYXlfbWNoaWQ+MTI2OTIxMTAwMTwvd3hwYXlfbWNoaWQ+DQoJCTx3eHBheV9wYXJ0bmVyaWQ+MTI2OTIxMTAwMTwvd3hwYXlfcGFydG5lcmlkPg0KCQk8d3hwYXlfYXBpa2V5PmNjODA4OGMzNTFhODk2MzI2MDk1MTU5OThjZGRkY2Y0PC93eHBheV9hcGlrZXk+DQoJCTx3eHBheV9nZXRvcmRlcnVybD5odHRwczovL2FwaS5tY2gud2VpeGluLnFxLmNvbS9wYXkvdW5pZmllZG9yZGVyDQoJCTwvd3hwYXlfZ2V0b3JkZXJ1cmw+DQoJCTx3eHBheV9xdWVyeW9yZGVydXJsPmh0dHBzOi8vYXBpLm1jaC53ZWl4aW4ucXEuY29tL3BheS9vcmRlcnF1ZXJ5DQoJCTwvd3hwYXlfcXVlcnlvcmRlcnVybD4NCgkJPHd4cGF5X3BhY2thZ2U+U2lnbj1XWFBheTwvd3hwYXlfcGFja2FnZT4NCgkJPG5vdGlmeV91cmw+aHR0cDovL3Nka3NlcnZlci5vYS56dWxvbmcuY29tL3Nka3NlcnZlci9hcGkvd3hwYXlfY2FsbGJhY2sNCgkJPC9ub3RpZnlfdXJsPg0KCQk8ZmVlX3R5cGU+Q05ZPC9mZWVfdHlwZT4NCgkJPHRyYWRlX3R5cGU+QVBQPC90cmFkZV90eXBlPg0KCQk8bGltaXRfdHlwZT5ub19jcmVkaXQ8L2xpbWl0X3R5cGU+DQoJCTwhLS0gtaXOu86qt9bW0yAtLT4NCgkJPG9yZGVyX2V4cGlyZXRpbWU+MzA8L29yZGVyX2V4cGlyZXRpbWU+DQoJPC93eHBheT4NCg0KCTwhLS0g0vjBqtanuLbF5NbDIC0tPg0KCTx1bmlvbnBheT4NCgkJPHVuaW9ucGF5X3ZlcnNpb24+NS4wLjA8L3VuaW9ucGF5X3ZlcnNpb24+DQoJCTx1bmlvbnBheV9lbmNvZGluZz5VVEYtODwvdW5pb25wYXlfZW5jb2Rpbmc+DQoJCTx1bmlvbnBheV9zaWdubWV0aG9kPjAxPC91bmlvbnBheV9zaWdubWV0aG9kPg0KCQk8dW5pb25wYXlfdHhudHlwZV9jb25zdW1lPjAxPC91bmlvbnBheV90eG50eXBlX2NvbnN1bWU+DQoJCTx1bmlvbnBheV90eG5zdWJ0eXBlX2NvbnN1bWU+MDE8L3VuaW9ucGF5X3R4bnN1YnR5cGVfY29uc3VtZT4NCgkJPHVuaW9ucGF5X3R4bnR5cGVfcXVlcnk+MDA8L3VuaW9ucGF5X3R4bnR5cGVfcXVlcnk+DQoJCTx1bmlvbnBheV90eG5zdWJ0eXBlX3F1ZXJ5PjAwPC91bmlvbnBheV90eG5zdWJ0eXBlX3F1ZXJ5Pg0KCQk8dW5pb25wYXlfYml6dHlwZT4wMDAyMDE8L3VuaW9ucGF5X2JpenR5cGU+DQoJCTx1bmlvbnBheV9jaGFubmVsdHlwZT4wODwvdW5pb25wYXlfY2hhbm5lbHR5cGU+DQoJCTx1bmlvbnBheV9tZXJpZD43Nzc8L3VuaW9ucGF5X21lcmlkPg0KCQk8dW5pb25wYXlfYWNjZXNzdHlwZT4wPC91bmlvbnBheV9hY2Nlc3N0eXBlPg0KCQk8dW5pb25wYXlfYWNjdHlwZT4wMTwvdW5pb25wYXlfYWNjdHlwZT4NCgkJPHVuaW9ucGF5X2N1cnJlbmN5Y29kZT4xNTY8L3VuaW9ucGF5X2N1cnJlbmN5Y29kZT4NCgkJPCEtLSCy4srUtcQgIjAxIiDV/cq9tcQiMDAiIC0tPg0KCQk8dW5pb25wYXlfbW1vZGU+MDE8L3VuaW9ucGF5X21tb2RlPg0KDQoJCTx1bmlvbnBheV9zaWduY2VydF9wYXRoPkQ6XFxadWxvbmdTREtfU2VydmVyXFx0cnVua1xcc2Rrc2VydmVyXFxzZGtzZXJ2ZXJfY29uZmlnXFxhY3BfcHJvZF9zaWduLnBmeA0KCQk8L3VuaW9ucGF5X3NpZ25jZXJ0X3BhdGg+DQoJCTx1bmlvbnBheV9zaWduY2VydF9wd2Q+QCkhXnp1bG9uZ2Z1bjwvdW5pb25wYXlfc2lnbmNlcnRfcHdkPg0KCQk8dW5pb25wYXlfc2lnbmNlcnRfdHlwZT5QS0NTMTI8L3VuaW9ucGF5X3NpZ25jZXJ0X3R5cGU+DQoJCTx1bmlvbnBheV92YWxpZGF0ZUNlcnRfZGlyPkQ6XFxadWxvbmdTREtfU2VydmVyXFx0cnVua1xcc2Rrc2VydmVyXFxzZGtzZXJ2ZXJfY29uZmlnXFwNCgkJPC91bmlvbnBheV92YWxpZGF0ZUNlcnRfZGlyPg0KCQk8dW5pb25wYXlfc2luZ2xlTW9kZT50cnVlPC91bmlvbnBheV9zaW5nbGVNb2RlPg0KCQk8dW5pb25wYXlfaXNkZWJ1Zz4xPC91bmlvbnBheV9pc2RlYnVnPg0KCQk8dW5pb25wYXlfb3JkZXJ1cmw+aHR0cHM6Ly8xMDEuMjMxLjIwNC44MDo1MDAwL2dhdGV3YXkvYXBpL2FwcFRyYW5zUmVxLmRvDQoJCTwvdW5pb25wYXlfb3JkZXJ1cmw+DQoJCTx1bmlvbnBheV9xdWVyeXVybD5odHRwczovLzEwMS4yMzEuMjA0LjgwOjUwMDAvZ2F0ZXdheS9hcGkvcXVlcnlUcmFucy5kbw0KCQk8L3VuaW9ucGF5X3F1ZXJ5dXJsPg0KCQk8bm90aWZ5X3VybD5odHRwOi8vc2Rrc2VydmVyLm9hLnp1bG9uZy5jb20vc2Rrc2VydmVyL2FwaS91bmlvbnBheV9jYWxsYmFjaw0KCQk8L25vdGlmeV91cmw+DQoJPC91bmlvbnBheT4NCg0KCTwhLS1JUMfrx/PGtcLKz97WxsXk1sMgLS0+DQoJPCEtLXBlcmlvZLWlzrvKx8PrIC0tPg0KCTwhLS1mcmVxdWVuY3nKx7fDzsq0zsr9yc/P3iAtLT4NCgk8cmVxdWVzdGxpbWl0Pg0KCQk8cGVyaW9kPjM2MDA8L3BlcmlvZD4NCgkJPGZyZXF1ZW5jeT4xMDAwPC9mcmVxdWVuY3k+DQoJPC9yZXF1ZXN0bGltaXQ+DQoNCgk8IS0tUmFiYml0TVHF5NbDIC0tPg0KCTxyYWJiaXRtcT4NCgkJPGhvc3RfaXA+a2VlbC1yYWJiaXRtcTwvaG9zdF9pcD4NCgkJPGhvc3RfcG9ydD41NjcyPC9ob3N0X3BvcnQ+DQoJCTx1c2VyX25hbWU+enVsb25ncmM8L3VzZXJfbmFtZT4NCgkJPHVzZXJfcHdkPlp1bG9uZ0AxMjMuY29tPC91c2VyX3B3ZD4NCgkJPGV4Y2hhbmdlX25hbWU+ZGlyZWN0X1NESzwvZXhjaGFuZ2VfbmFtZT4NCgkJPHF1ZXVlX25hbWVfZm9yX2xvZ2luPmxvZ2luX1NESzwvcXVldWVfbmFtZV9mb3JfbG9naW4+DQoJCTxxdWV1ZV9uYW1lX2Zvcl9jaGFyZ2U+Y2hhcmdlX1NESzwvcXVldWVfbmFtZV9mb3JfY2hhcmdlPg0KCQk8cXVldWVfbmFtZV9mb3JfY2hlY2tyZWNlaXB0PmNoZWNrcmVjZWlwdF9TREsNCgkJPC9xdWV1ZV9uYW1lX2Zvcl9jaGVja3JlY2VpcHQ+DQoJCTxxdWV1ZV9uYW1lX2Zvcl9zZW5kYWxlcnRpbmZvPnNlbmRhbGVydGluZm9fU0RLDQoJCTwvcXVldWVfbmFtZV9mb3Jfc2VuZGFsZXJ0aW5mbz4NCgk8L3JhYmJpdG1xPg0KCTwhLS22qMqxyM7O8cXk1sMgLS0+DQoJPHNjaGVkdWxlcGVyaW9kPg0KCQk8c3RhcnRfZGVsYXk+MTA8L3N0YXJ0X2RlbGF5Pg0KCQk8Y2hlY2tfc3VjY2Vzc19wZXJpb2Q+OTA8L2NoZWNrX3N1Y2Nlc3NfcGVyaW9kPg0KCQk8Y2hlY2tfcHVuaXNoZWRfcGVyaW9kPjE4MDwvY2hlY2tfcHVuaXNoZWRfcGVyaW9kPg0KCQk8Y2hlY2tfdW5rbm93bl9wZXJpb2Q+MTgwPC9jaGVja191bmtub3duX3BlcmlvZD4NCgkJPGNoZWNrX3JlZGlzX3BlcmlvZD4xODA8L2NoZWNrX3JlZGlzX3BlcmlvZD4NCgk8L3NjaGVkdWxlcGVyaW9kPg0KDQoJPCEtLSC34r37z/vPosXk1sMgLS0+DQoJPGZvcmJpZD4NCgkJPGZvcmJpZF9tZXNzYWdlPsfXsK61xNfmwfrT6cDWu+HUsSVzo6zE+rrDo6HE+tLyzqqhsCVzobG2+LG7vfvWubXHwrzTzs+3o6y9q9PaJXO94rfio6zI59PQzsrM4sfrwarPtSVzoaMNCgkJPC9mb3JiaWRfbWVzc2FnZT4NCgkJPHNlcnZpY2VfY29udGFjdD56bGtmQHp1bG9uZy5jb208L3NlcnZpY2VfY29udGFjdD4NCgk8L2ZvcmJpZD4NCg0KCTwhLS2357/YxeTWwyAtLT4NCgk8cmlza2NvbnRyb2w+DQoJCTxyY19tc2c+xPq1xNXLu6fJ5s/TtdrI/be9tPqz5KOs1Kqxps7et6i1vdXLo6zH68T619TQ0M/ytdrI/be9s+TWtca9zKi9+NDQytu6886syKiho8j009DSyc7Ko6zH67W9udm3vcLbzLOwtNXVwtvMs9a40v3M4b27yerL37LEwc+how0KCQk8L3JjX21zZz4NCgkJPGRlbGF5X2VzdGFibGlzaF9udW0+ODwvZGVsYXlfZXN0YWJsaXNoX251bT4NCgkJPG5ldmVyX2VzdGFibGlzaF9udW0+MjA8L25ldmVyX2VzdGFibGlzaF9udW0+DQoJCTxiZV9jYW5kaWRhdGVfaW50ZXJ2YWw+MzAwPC9iZV9jYW5kaWRhdGVfaW50ZXJ2YWw+DQoJCTxwdW5pc2hfY2FuZGlkYXRlX3RpbWU+NDMyMDA8L3B1bmlzaF9jYW5kaWRhdGVfdGltZT4NCgkJPGRlbGF5X3B1bmlzaF9jb250aW51ZV90aW1lPjg2NDAwPC9kZWxheV9wdW5pc2hfY29udGludWVfdGltZT4NCgkJPGRlbGF5X3RvX2FjY291bnRfdGltZT4xMDgwMDwvZGVsYXlfdG9fYWNjb3VudF90aW1lPg0KCTwvcmlza2NvbnRyb2w+DQoNCgk8IS0tIGF1YW55t7W72LTtzvPC6yAtLT4NCgk8YXVhbnllcnJvcmNvZGU+DQoJCTxlcnJvcmNvZGU+MTwvZXJyb3Jjb2RlPg0KCQk8ZXJyb3Jjb2RlPjI8L2Vycm9yY29kZT4NCgk8L2F1YW55ZXJyb3Jjb2RlPg0KDQoJPGdsb2JhbD4NCgkJPHNka191cGRhdGVfZGF0ZT4yMDE2LTgtMSAwMDowMDowMDwvc2RrX3VwZGF0ZV9kYXRlPg0KCQk8YWNjb3VudF9yZWdpc3Rfb3Blbl9sZXZlbD4zPC9hY2NvdW50X3JlZ2lzdF9vcGVuX2xldmVsPg0KCQk8aXNTdGFydFVzZVJpc2tDb250cm9sPnRydWU8L2lzU3RhcnRVc2VSaXNrQ29udHJvbD4NCgkJPGlzU3RhcnRTZW5kTWVzc2FnZVRvUmlza0NvbnRyb2w+dHJ1ZQ0KCQk8L2lzU3RhcnRTZW5kTWVzc2FnZVRvUmlza0NvbnRyb2w+DQoJCTxpc1N0YXJ0U2NoZWR1bGVyPmZhbHNlPC9pc1N0YXJ0U2NoZWR1bGVyPg0KCQk8aXNDaGVja1BpY3R1cmVDYXB0Y2hhPmZhbHNlPC9pc0NoZWNrUGljdHVyZUNhcHRjaGE+DQoJCTxpc0F1dGhSZWRpcz50cnVlPC9pc0F1dGhSZWRpcz4NCgkJPGlzU3RhcnREZWJ1Z0xvZz50cnVlPC9pc1N0YXJ0RGVidWdMb2c+DQoJCTxpc1Byb2R1Y3RWZXJzaW9uPnRydWU8L2lzUHJvZHVjdFZlcnNpb24+DQoJCTxpc1N0cmljdE9yZGVyPmZhbHNlPC9pc1N0cmljdE9yZGVyPg0KCQk8IS0tIHRva2Vu09DQp8qxs6SjrLWlzrvD6yAtLT4NCgkJPHRva2VuX2xpdmVfdGltZT4xODAwPC90b2tlbl9saXZlX3RpbWU+DQoJCTxzbXNjYXB0Y2hhX2xpdmVfdGltZT42MDA8L3Ntc2NhcHRjaGFfbGl2ZV90aW1lPg0KCQk8c2lnX2xpdmVfdGltZT44NjQwMDwvc2lnX2xpdmVfdGltZT4NCgkJPGFwcGxlX2NoZWNrX3NhbmRib3g+dHJ1ZTwvYXBwbGVfY2hlY2tfc2FuZGJveD4NCgkJPGFwcGxlX2NoZWNrX2Nvbm5lY3RUaW1lb3V0PjEwMDAwPC9hcHBsZV9jaGVja19jb25uZWN0VGltZW91dD4NCgkJPGFwcGxlX2NoZWNrX3NvVGltZW91dD4xMDAwMDwvYXBwbGVfY2hlY2tfc29UaW1lb3V0Pg0KCQk8YXBwbGVfc2tpcF9wYXk+ZmFsc2U8L2FwcGxlX3NraXBfcGF5Pg0KCQk8d2hpdGVfaXBfbGlzdD4xMjcuMC4wLjF8MTAuNjQuOC4zMTwvd2hpdGVfaXBfbGlzdD4NCgkJPG9sZF9hcHBzPnpqbG1pb3N8empsbWFuZHJvaWR8anp0a2NhbmRyb2lkfGp6dGtjaW9zfHlzcWhpb3N8eXNxaGFuZHJvaWR8cGlvbmVlcmlvc3xwaW9uZWVyYW5kcm9pZHxtc3p5dGVzdGlvc3xtc3p5dGVzdGFuZHJvaWR8bXN6eWlvc3xtc3p5YW5kcm9pZHxqenRrY2FkYW5kcm9pZHxtaQ0Kbmlpb3N8bWluaWFuZHJvaWR8cnJkenppb3N8cnJkenphbmRyb2lkfGx5YmFuZHJvaWR8bHliaW9zfGp6dGtjamJ8empsbWpifHlzenRqYnx5c3p0aW9zfHlzenRhbmRyb2lkfGtlZWx8bWh6eGpifG1oenhhbmRyb2lkfG1oenhpb3N8ZGZiYmpifGRmYmJhbmRyb2lkfGRmYmJpb3M8L29sZF9hcHBzPg0KCQk8c2tpcF9zYXZlX2RiPnRydWU8L3NraXBfc2F2ZV9kYj4NCgk8L2dsb2JhbD4NCg0KPC9jb25maWd1cmF0aW9uPg0K
+---
+# Source: keel-helm/templates/keel.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sdkslave-update-wait
+  namespace: keel-test
+data:
+  wait: |
+---
+# Source: keel-helm/templates/keel.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
   name: gmsp-config-base-v5316
   namespace: keel-test
 binaryData:
@@ -157,6 +189,38 @@ data:
       fi
     done
     exit 0
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: keel-rabbitmq-local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: keel-rabbitmq-pv
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: keel-rabbitmq-local-storage
+  local:
+    path: /data/keel/rabbitmq
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - k8s-node1
 ---
 # Source: keel-helm/templates/keel.yaml
 apiVersion: v1
@@ -204,6 +268,17 @@ spec:
   clusterIP: None
   selector:
     app: riskcontrol
+---
+# Source: keel-helm/templates/keel.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sdkslave-headless
+  namespace: keel-test
+spec:
+  clusterIP: None
+  selector:
+    app: sdkslave
 ---
 # Source: keel-helm/templates/keel.yaml
 apiVersion: v1
@@ -503,6 +578,92 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
+ name: sdkslave
+ namespace: keel-test
+ labels:
+   app: sdkslave
+spec:
+  serviceName: sdkslave-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sdkslave
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: sdkslave
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - sdkslave
+            topologyKey: kubernetes.io/hostName
+      imagePullSecrets:
+        - name: zulong-key
+      containers:
+        - name: sdkslave
+          image: "harbor.zulong.com/keel-images/sdkslave:5148"
+          imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/local/tomcat/bin/catalina.sh stop 20"]
+          env:
+          - name: KEEL_VERSION
+            value: "5148"
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: HOST_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+          - name: CONFIG_PATH
+            value: "/etc/sdkslave_config"
+          resources:
+            limits:
+              memory: 4G
+          volumeMounts:
+            - name: localtime
+              mountPath: /etc/localtime
+            - name: logs
+              mountPath: /export/logs/sdkslave
+            - name: keel-shared
+              mountPath: /keel/shared
+            - name: update-wait
+              mountPath: /keel/update
+            - name: config-base
+              mountPath: /etc/sdkslave_config/base
+      volumes:
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+        - name: logs
+          hostPath:
+            path: /data/keel/sdkslave
+        - name: keel-shared
+          configMap:
+            name: keel-shared
+        - name: update-wait
+          configMap:
+            name: sdkslave-update-wait
+        - name: config-base
+          configMap:
+            name: sdkslave-config-base-5148
+---
+# Source: keel-helm/templates/keel.yaml
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
  name: gmsp
  namespace: keel-test
  labels:
@@ -553,8 +714,6 @@ spec:
                 fieldPath: status.hostIP
           - name: CONFIG_PATH
             value: "/usr/local/tomcat/gmsp_config"
-          - name: JAVA_OPTS
-            value: -Xmx1024m -Xms1024m
           resources:
             limits:
               memory: 1024M
@@ -905,6 +1064,22 @@ spec:
 ---
 # Source: keel-helm/templates/rabbitmq.yaml
 apiVersion: rabbitmq.com/v1beta1
+kind: Permission
+metadata:
+  name: keel-rabbitmq-user-permission
+  namespace: keel-test
+spec:
+  vhost: "/"
+  user: zulongrc
+  permissions:
+    write: ".*"
+    configure: ".*"
+    read: ".*"
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
 kind: Queue
 metadata:
   name: login-sdk
@@ -1058,3 +1233,44 @@ spec:
   durable: true
   rabbitmqClusterReference:
     name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: keel-rabbitmq
+  namespace: keel-test
+spec:
+  image: harbor.zulong.com/common-images/rabbitmq:3.11
+  imagePullSecrets:
+      - name: zulong-key
+  service:
+    type: NodePort
+  replicas: 1
+  persistence:
+    storageClassName: keel-rabbitmq-local-storage
+    storage: 10Gi
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  rabbitmq:
+    additionalConfig:     |
+      total_memory_available_override_value = 1600Mi
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: User
+metadata:
+  name: keel-rabbitmq-user
+  namespace: keel-test
+spec:
+  tags:
+    - management
+    - policymaker
+    - monitoring
+    - administrator
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+  importCredentialsSecret:
+    name: keel-rabbitmq-secret
