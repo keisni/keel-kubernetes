@@ -74,10 +74,12 @@ spec:
             limits:
 {{ toYaml .app.resources | indent 14 }}
 {{- end }}
+{{- if .app.service }}
           ports:
 {{- range .app.service.ports }}
           - containerPort: {{ .port }}
             name: {{ include "keel.port_name" . }}
+{{- end }}
 {{- end }}
           volumeMounts:
             - name: localtime
@@ -98,6 +100,7 @@ spec:
               mountPath: {{ printf "%s/%s" $mountPath $sub}}
 {{- end }}
 {{- end }}
+{{- if .app.update }}
 {{- if .app.update.script }}
             - name: app-test
               mountPath: "/app/test"
@@ -129,6 +132,7 @@ spec:
             periodSeconds: 5
             failureThreshold: 0
 {{- end }}
+{{- end }}
       volumes:
         - name: localtime
           hostPath:
@@ -154,7 +158,7 @@ spec:
             name: {{ printf "%s-config-%s-%s" $appName $sub (include "keel.version" $dot) }}
 {{- end }}
 {{- end }}
-{{- if .app.update.script }}
+{{- if and .app.update .app.update.script }}
         - name: app-test
           configMap:
             name: {{ printf "%s-config-test" $appName }}

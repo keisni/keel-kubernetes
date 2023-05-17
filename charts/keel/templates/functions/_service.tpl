@@ -1,4 +1,5 @@
 {{- define "keel.service" -}}
+{{- if .app.service }}
 ---
 apiVersion: v1
 kind: Service
@@ -20,6 +21,7 @@ spec:
     nodePort: {{ .nodePort }}
 {{- end }}
 {{- end }}
+{{- end }}
 ---
 apiVersion: v1
 kind: Service
@@ -30,9 +32,11 @@ spec:
   clusterIP: None
   selector:
     app: {{ .app.name }}
+{{- if .app.service }}
   ports:
 {{- range .app.service.ports }}
   - port: {{ .port }}
     name: {{ include "keel.port_name" . }}
+{{- end }}
 {{- end }}
 {{- end }}

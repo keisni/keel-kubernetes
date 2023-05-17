@@ -48,10 +48,12 @@ metadata:
   name: {{ .app.name }}-update-wait
   namespace: {{ .Release.Namespace }}
 data:
-   wait: |
-{{ default "" .app.update.wait | indent 4}}
+  wait: |
+{{- if and .app.update .app.update.wait}}
+{{ .app.update.wait | indent 4}}
+{{- end }}
 ---
-{{- if .app.update.script }}
+{{- if and .app.update .app.update.script }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
