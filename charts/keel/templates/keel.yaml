@@ -1,3 +1,4 @@
+{{- if eq .Values.keel.step 1}}
 {{- range .Values.keel.apps }}
 {{- if not .disabled }}
 {{- $args := (dict "app" . "Values" $.Values "Release" $.Release "Files" $.Files) }}
@@ -9,6 +10,7 @@
 {{- end }}
 {{- if .ingress }}
 {{ include "keel.ingress" $args }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

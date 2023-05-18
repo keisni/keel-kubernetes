@@ -1,6 +1,5 @@
 keel:
-  region: cn
-  step: 0
+  region:
   image:
     repository: harbor.zulong.com/keel-images
     pullSecrets:
@@ -12,7 +11,7 @@ keel:
     name: nginx
   rabbitmq:
     cluster:
-      enabled: false
+      enabled: true
       name: keel-rabbitmq
       image: harbor.zulong.com/common-images/rabbitmq:3.11
       serviceType: NodePort
@@ -130,9 +129,10 @@ keel:
     resources:
       memory: 4G
     log:
-      path: /export/logs/sdkslave
+      path: /export/logs
     configPath: /etc/sdkslave_config
   - name: gmsp
+    disabled: true
     replicas: 1
     tag: 5343
     resources:

@@ -1,0 +1,593 @@
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: keel-rabbitmq-secret
+  namespace: keel-os
+type: Opaque
+stringData:
+  username: zulongrc
+  password: Zulong@123.com
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: keel-os-rabbitmq-local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: keel-os-rabbitmq-pv
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: keel-os-rabbitmq-local-storage
+  local:
+    path: /data/keel-os/rabbitmq
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - k8s-node2
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Binding
+metadata:
+  name: direct-sdk-0
+  namespace: keel-os
+spec:
+  source: direct_SDK
+  destination: charge_SDK
+  destinationType: queue
+  routingKey: charge_SDK
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Binding
+metadata:
+  name: direct-sdk-1
+  namespace: keel-os
+spec:
+  source: direct_SDK
+  destination: charge_SDK
+  destinationType: queue
+  routingKey: login_SDK
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Binding
+metadata:
+  name: direct-sdk-2
+  namespace: keel-os
+spec:
+  source: direct_SDK
+  destination: checkreceipt_SDK
+  destinationType: queue
+  routingKey: checkreceipt_SDK
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Binding
+metadata:
+  name: direct-sdk-3
+  namespace: keel-os
+spec:
+  source: direct_SDK
+  destination: login_SDK
+  destinationType: queue
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Binding
+metadata:
+  name: direct-sdk-4
+  namespace: keel-os
+spec:
+  source: direct_SDK
+  destination: login_SDK
+  destinationType: queue
+  routingKey: login
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Binding
+metadata:
+  name: direct-sdk-5
+  namespace: keel-os
+spec:
+  source: direct_SDK
+  destination: login_SDK
+  destinationType: queue
+  routingKey: login_SDK
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Binding
+metadata:
+  name: direct-sdk-6
+  namespace: keel-os
+spec:
+  source: direct_SDK
+  destination: login_sdk_to_rc
+  destinationType: queue
+  routingKey: login
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Binding
+metadata:
+  name: direct-sdk-7
+  namespace: keel-os
+spec:
+  source: direct_SDK
+  destination: register_SDK
+  destinationType: queue
+  routingKey: register_SDK
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Binding
+metadata:
+  name: direct-sdk-8
+  namespace: keel-os
+spec:
+  source: direct_SDK
+  destination: sendalertinfo_SDK
+  destinationType: queue
+  routingKey: sendalertinfo_SDK
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Binding
+metadata:
+  name: direct-sdk-9
+  namespace: keel-os
+spec:
+  source: direct_SDK
+  destination: test_queue
+  destinationType: queue
+  routingKey: test
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Binding
+metadata:
+  name: direct-sdk-10
+  namespace: keel-os
+spec:
+  source: direct_SDK
+  destination: voided_slave
+  destinationType: queue
+  routingKey: voided_slave
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Binding
+metadata:
+  name: qrcode-pay-fanout-sdk-0
+  namespace: keel-os
+spec:
+  source: qrcode_pay_fanout_SDK
+  destination: qrcode_pay_SDK1
+  destinationType: queue
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Binding
+metadata:
+  name: qrcode-pay-fanout-sdk-1
+  namespace: keel-os
+spec:
+  source: qrcode_pay_fanout_SDK
+  destination: qrcode_pay_SDK2
+  destinationType: queue
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Exchange
+metadata:
+  name: direct-sdk
+  namespace: keel-os
+spec:
+  name: direct_SDK
+  type: direct
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Exchange
+metadata:
+  name: qrcode-login-fanout-sdk
+  namespace: keel-os
+spec:
+  name: qrcode_login_fanout_SDK
+  type: fanout
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Exchange
+metadata:
+  name: qrcode-pay-fanout-sdk
+  namespace: keel-os
+spec:
+  name: qrcode_pay_fanout_SDK
+  type: fanout
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Permission
+metadata:
+  name: keel-rabbitmq-user-permission
+  namespace: keel-os
+spec:
+  vhost: "/"
+  user: zulongrc
+  permissions:
+    write: ".*"
+    configure: ".*"
+    read: ".*"
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Queue
+metadata:
+  name: login-sdk
+  namespace: keel-os
+spec:
+  name: login_SDK
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Queue
+metadata:
+  name: login-sdk-to-rc
+  namespace: keel-os
+spec:
+  name: login_sdk_to_rc
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Queue
+metadata:
+  name: charge-sdk
+  namespace: keel-os
+spec:
+  name: charge_SDK
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Queue
+metadata:
+  name: checkreceipt-sdk
+  namespace: keel-os
+spec:
+  name: checkreceipt_SDK
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Queue
+metadata:
+  name: sendalertinfo-sdk
+  namespace: keel-os
+spec:
+  name: sendalertinfo_SDK
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Queue
+metadata:
+  name: register-sdk
+  namespace: keel-os
+spec:
+  name: register_SDK
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Queue
+metadata:
+  name: qrcode-login-sdk
+  namespace: keel-os
+spec:
+  name: qrcode_login_SDK
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Queue
+metadata:
+  name: qrcode-pay-sdk
+  namespace: keel-os
+spec:
+  name: qrcode_pay_SDK
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Queue
+metadata:
+  name: qrcode-pay-sdk1
+  namespace: keel-os
+spec:
+  name: qrcode_pay_SDK1
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Queue
+metadata:
+  name: qrcode-pay-sdk2
+  namespace: keel-os
+spec:
+  name: qrcode_pay_SDK2
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Queue
+metadata:
+  name: test-queue
+  namespace: keel-os
+spec:
+  name: test_queue
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: Queue
+metadata:
+  name: voided-slave
+  namespace: keel-os
+spec:
+  name: voided_slave
+  autoDelete: false
+  durable: true
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: keel-rabbitmq
+  namespace: keel-os
+spec:
+  image: harbor.zulong.com/common-images/rabbitmq:3.11
+  imagePullSecrets:
+      - name: zulong-key
+  service:
+    type: NodePort
+  replicas: 1
+  persistence:
+    storageClassName: keel-os-rabbitmq-local-storage
+    storage: 10Gi
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  rabbitmq:
+    additionalConfig:     |
+      total_memory_available_override_value = 1600Mi
+---
+# Source: keel-helm/templates/rabbitmq.yaml
+apiVersion: rabbitmq.com/v1beta1
+kind: User
+metadata:
+  name: keel-rabbitmq-user
+  namespace: keel-os
+spec:
+  tags:
+    - management
+    - policymaker
+    - monitoring
+    - administrator
+  rabbitmqClusterReference:
+    name: keel-rabbitmq
+  importCredentialsSecret:
+    name: keel-rabbitmq-secret
+---
+# Source: keel-helm/templates/hooks/post-install-0.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: helm-hook-wait
+  namespace: keel-os
+  annotations:
+    "helm.sh/hook": post-install, post-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation, hook-succeeded
+---
+# Source: keel-helm/templates/hooks/post-install-0.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: post-install-0
+  namespace: keel-os
+  annotations:
+    "helm.sh/hook": post-install, post-upgrade
+    "helm.sh/hook-weight": "-3"
+    "helm.sh/hook-delete-policy": before-hook-creation, hook-succeeded
+data:
+  post-install-0.sh: |
+    #/bin/bash
+    ns=$1
+    
+    check_rmq_ready()
+    {
+        res=$(curl -L -u $RMQ_U:$RMQ_P  http://keel-rabbitmq:15672/api/healthchecks/node)
+        echo $res
+        if [[ "$res" == "{\"status\":\"ok\"}"  ]]; then
+            return 0
+        else
+            return 1
+        fi
+    }
+    
+    check_rmq_ready $ns
+    while [ $? -ne 0  ]; do
+        sleep 5.0
+        check_rmq_ready  $ns
+    done
+---
+# Source: keel-helm/templates/hooks/post-install-0.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: helm-hook-wait
+  namespace: keel-os
+  annotations:
+    "helm.sh/hook": post-install, post-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation, hook-succeeded
+rules:
+  - apiGroups: ["rabbitmq.com"]
+    resources: ["rabbitmqclusters"]
+    verbs: ["list", "get" ]
+---
+# Source: keel-helm/templates/hooks/post-install-0.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: helm-hook-wait-access
+  annotations:
+    "helm.sh/hook": post-install, post-upgrade
+    "helm.sh/hook-weight": "-4"
+    "helm.sh/hook-delete-policy": before-hook-creation, hook-succeeded
+subjects:
+  - kind: User
+    name: system:serviceaccount:keel-os:helm-hook-wait
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: helm-hook-wait
+---
+# Source: keel-helm/templates/hooks/post-install-0.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: post-install-0
+  namespace: keel-os
+  annotations:
+    "helm.sh/hook": post-install, post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation, hook-succeeded
+spec:
+  template:
+    metadata:
+      name: post-install-0
+      labels:
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/instance: "keel-os-0"
+        helm.sh/chart: "keel-helm-0.1.0"
+    spec:
+      serviceAccountName: helm-hook-wait
+      restartPolicy: Never
+      containers:
+        - name: wait-ready
+          image: "harbor.zulong.com/common-images/k8s-kubectl:v1.25.4"
+          command:
+            - "/bin/sh"
+            - "/scripts/post-install-0.sh"
+            - "keel-os"
+          env:
+            - name: RMQ_U
+              value: zulongrc
+            - name: RMQ_P
+              value: Zulong@123.com
+          volumeMounts:
+            - name: script
+              mountPath: /scripts/
+      volumes:
+        - name: script
+          configMap:
+            name: post-install-0

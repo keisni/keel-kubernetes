@@ -139,7 +139,7 @@ spec:
             path: /etc/localtime
         - name: logs
           hostPath:
-            path: {{ .app.log.hostPath }}
+            path: /data/{{ .Release.Namespace }}/{{ .app.name }}
         - name: keel-shared
           configMap:
             name: keel-shared
@@ -149,7 +149,8 @@ spec:
 {{- $processedDict := dict -}}
 {{- $dot := . }}
 {{- $appName := .app.name }}
-{{- range $path, $bytes := .Files.Glob (printf "resources/%s/config/**" $appName ) }}
+{{- $configDir := coalesce .app.configFrom .app.name }}
+{{- range $path, $bytes := .Files.Glob (printf "resources/%s/config/**" $configDir ) }}
 {{- $sub := base (dir $path) }}
 {{- if not (hasKey $processedDict $sub) -}}
 {{ $_ := set $processedDict $sub "true" }}

@@ -1,10 +1,10 @@
 {{- $clusterName := .Values.keel.rabbitmq.cluster.name | lower | replace "_" "-" }}
-{{- if .Values.keel.rabbitmq.cluster.enabled }}
+{{- if eq .Values.keel.step 0 }}
 {{- if .Values.keel.storage.local }}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: keel-rabbitmq-pv
+  name: {{ .Release.Namespace }}-rabbitmq-pv
 spec:
   capacity:
     storage: {{ .Values.keel.rabbitmq.cluster.storage.size }}
@@ -12,9 +12,9 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Delete
-  storageClassName: keel-rabbitmq-local-storage
+  storageClassName: {{ .Release.Namespace }}-rabbitmq-local-storage
   local:
-    path: {{ .Values.keel.rabbitmq.cluster.storage.local.path }}
+    path: /data/{{ .Release.Namespace }}/rabbitmq
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -27,12 +27,40 @@ spec:
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: keel-rabbitmq-local-storage
+  name: {{ .Release.Namespace }}-rabbitmq-local-storage
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
 ---
 {{- end }}
 
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: {{ $clusterName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  image: {{ .Values.keel.rabbitmq.cluster.image }}
+{{- if .Values.keel.image.pullSecrets }}
+  imagePullSecrets:
+{{ toYaml .Values.keel.image.pullSecrets | indent 6 }}
+{{- end }}
+  service:
+    type: {{ default "ClusterIP" .Values.keel.rabbitmq.cluster.serviceType}}
+  replicas: {{ default 1 .Values.keel.rabbitmq.cluster.replicas }}
+  persistence:
+    storageClassName: {{ if .Values.keel.storage.local }}{{ .Release.Namespace }}-rabbitmq-local-storage{{ else }}{{ .Values.keel.storage.className}}{{ end }}
+    storage: {{ .Values.keel.rabbitmq.cluster.storage.size }}
+{{- if .Values.keel.rabbitmq.cluster.resources }}
+  resources:
+    limits:
+{{ toYaml .Values.keel.rabbitmq.cluster.resources | indent 6 }}
+{{- end }}
+  rabbitmq:
+{{- if .Values.keel.rabbitmq.cluster.additionalConfig }}
+    additionalConfig: {{ toYaml .Values.keel.rabbitmq.cluster.additionalConfig | indent 4 }}
+{{- end }}
+
+---
 apiVersion: v1
 kind: Secret
 metadata:
@@ -75,35 +103,6 @@ spec:
   rabbitmqClusterReference:
     name: {{ $clusterName }}
 ---
-
-apiVersion: rabbitmq.com/v1beta1
-kind: RabbitmqCluster
-metadata:
-  name: {{ $clusterName }}
-  namespace: {{ .Release.Namespace }}
-spec:
-  image: {{ .Values.keel.rabbitmq.cluster.image }}
-{{- if .Values.keel.image.pullSecrets }}
-  imagePullSecrets:
-{{ toYaml .Values.keel.image.pullSecrets | indent 6 }}
-{{- end }}
-  service:
-    type: {{ default "ClusterIP" .Values.keel.rabbitmq.cluster.serviceType}}
-  replicas: {{ default 1 .Values.keel.rabbitmq.cluster.replicas }}
-  persistence:
-    storageClassName: {{ if .Values.keel.storage.local }}keel-rabbitmq-local-storage{{ else }}{{ .Values.keel.storage.className}}{{ end }}
-    storage: {{ .Values.keel.rabbitmq.cluster.storage.size }}
-{{- if .Values.keel.rabbitmq.cluster.resources }}
-  resources:
-    limits:
-{{ toYaml .Values.keel.rabbitmq.cluster.resources | indent 6 }}
-{{- end }}
-  rabbitmq:
-{{- if .Values.keel.rabbitmq.cluster.additionalConfig }}
-    additionalConfig: {{ toYaml .Values.keel.rabbitmq.cluster.additionalConfig | indent 4 }}
-{{- end }}
----
-{{- end }}
 
 {{- $dot := . }}
 {{- range .Values.keel.rabbitmq.queue }}
@@ -155,4 +154,5 @@ spec:
 ---
 {{- end }}
 
+{{- end }}
 {{- end }}

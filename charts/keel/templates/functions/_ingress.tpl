@@ -8,9 +8,7 @@ metadata:
   name: {{ printf "%s-%d" $dot.app.name (int $idx) }}
   namespace: {{ $dot.Release.Namespace }}
   annotations:
-{{- if $rule.disableAccessLog }}
-    nginx.ingress.kubernetes.io/enable-access-log: "false"
-{{- end }}
+    nginx.ingress.kubernetes.io/enable-access-log: {{ if $rule.disableAccessLog }}"false"{{ else }}"true"{{ end }}
 {{- if $rule.snippet }}
     nginx.ingress.kubernetes.io/configuration-snippet: {{ $rule.snippet | quote }}
 {{- end }}

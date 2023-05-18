@@ -1,6 +1,5 @@
 keel:
-  region: cn
-  step: 0
+  region:
   image:
     repository: harbor.zulong.com/keel-images
     pullSecrets:
@@ -12,7 +11,7 @@ keel:
     name: nginx
   rabbitmq:
     cluster:
-      enabled: false
+      enabled: true
       name: keel-rabbitmq
       image: harbor.zulong.com/common-images/rabbitmq:3.11
       serviceType: NodePort
@@ -20,7 +19,7 @@ keel:
       storage:
         size: 10Gi
         local:
-          node: k8s-node1
+          node: k8s-node2
       resources:
         cpu: 1000m
         memory: 2Gi
@@ -75,74 +74,39 @@ keel:
       - name: test_queue
       - name: voided_slave
   apps:
-  - name: sdkserver
-    tag: 5332
-    replicas: 2
-    resources:
-      memory: 6G
-    nodeAffinity:
-      key: keel/node
-      value: sdkserver
-    javaOpts: ""
-    service:
-      ports:
-      - port: 8080
-      - port: 8009
-    ingress:
-      host: sdkserver.zulong.com
-      secret: keel-secret
-      port: 8080
-      rules:
-        - path:
-           - "/"
-          allow:
-            - 10.236.254.0/24
-          deny: []
-        - path: ["/images/", "/js/", "/css/"]
-          disableAccessLog: true
-          snippet: |
-            proxy_set_header X-Forwarded-For $remote_addr;
-            proxy_redirect http:// https://;
-        - path: ["/api/validate"]
-          exactMatch: true
-          disableAccessLog: true
-    log:
-      path: /export/logs/
-    configPath: /etc/sdkserver_config
-    crontabPath: /crontab
-    update:
-      wait: ""
-      http:
-        path: "/api/validate?appid=iprojectios&username=10542&token=2nGbR9ui1fD3v3uzKhMaQMTNYkoXhWTAXqYU6FNrupksSU45ZL1EQriizhzuMRXkwi6VWR6VmfFnyhzGh41j9woR&loginip=1984621578&version=1.0&device_uuid=5688225dc53eb695df7eac4c400505a8e560d45e"
+    - name: sdkosserver
+      tag: 5110
+      replicas: 1
+      resources:
+        memory: 6G
+      nodeAffinity:
+        key: keel/node
+        value: sdkserver
+      javaOpts: ""
+      service:
+        ports:
+          - port: 8080
+          - port: 8009
+      ingress:
+        host: sdkosserver.zulong.com
+        secret: keel-secret
         port: 8080
-      script: ""
-  - name: riskcontrol
-    tag: 5172
-    replicas: 1
-    resources:
-      memory: 4G
-    log:
-      path: /export/logs/RiskControl
-    configPath: /etc/rcserver_config
-  - name: sdkslave
-    tag: 5148
-    replicas: 1
-    resources:
-      memory: 4G
-    log:
-      path: /export/logs/sdkslave
-    configPath: /etc/sdkslave_config
-  - name: gmsp
-    replicas: 1
-    tag: 5343
-    resources:
-      memory: 1024M
-    service:
-      type: NodePort
-      ports:
-        - port: 8080
-          nodePort: 31011
-    log:
-      path: /export/logs/
-    configPath: /usr/local/tomcat/gmsp_config
-    update: {}
+        rules:
+          - path:
+              - "/"
+      log:
+        path: /export/logs/
+      configPath: /etc/sdkosserver_config
+      update:
+        http:
+          path: "/api/validate?appid=iprojectios&username=10542&token=2nGbR9ui1fD3v3uzKhMaQMTNYkoXhWTAXqYU6FNrupksSU45ZL1EQriizhzuMRXkwi6VWR6VmfFnyhzGh41j9woR&loginip=1984621578&version=1.0&device_uuid=5688225dc53eb695df7eac4c400505a8e560d45e"
+          port: 8080
+    - name: sdkosslave
+      tag: 5017
+      replicas: 1
+      resources:
+        memory: 4G
+      log:
+        path: /export/logs
+      configPath: /etc/sdkosserver_config
+      configFrom: sdkosserver

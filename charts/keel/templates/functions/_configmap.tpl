@@ -5,7 +5,8 @@
 {{- $Release := .Release }}
 {{- $Files:= .Files }}
 {{- $processedDict := dict -}}
-{{- range $path, $bytes := .Files.Glob (printf "resources/%s/config/**" $appName) }}
+{{- $configDir := coalesce .app.configFrom .app.name }}
+{{- range $path, $bytes := .Files.Glob (printf "resources/%s/config/**" $configDir) }}
 {{- $sub := base (dir $path) }}
 {{- if not (hasKey $processedDict $sub) -}}
 {{ $_ := set $processedDict $sub "true" }}
@@ -15,7 +16,7 @@ metadata:
   name: {{ $appName }}-config-{{ $sub }}-{{ include "keel.version" $dot }}
   namespace: {{ $.Release.Namespace }}
 binaryData:
-{{ range $subpath, $_ :=  $Files.Glob (printf "resources/%s/config/%s/*" $appName $sub) }}
+{{ range $subpath, $_ :=  $Files.Glob (printf "resources/%s/config/%s/*" $configDir $sub) }}
 {{- $subname := base $subpath }}
 {{- $subname | indent 2 }}: |
 {{ $Files.Get $subpath | b64enc | indent 4}}

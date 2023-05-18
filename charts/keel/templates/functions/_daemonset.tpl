@@ -54,7 +54,7 @@ spec:
             path: /etc/localtime
         - name: logs
           hostPath:
-            path: {{ .app.log.hostPath }}
+            path: /data/{{ .Release.Namespace }}/{{ .app.name }}
         - name: crontab-conf
           configMap:
             name: {{ .app.name }}-crontab-conf
