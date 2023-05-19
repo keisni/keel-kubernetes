@@ -19,6 +19,15 @@ spec:
     metadata:
       labels:
         app: {{ .app.name }}
+{{- if and .app.skywalking .app.skywalking.enabled }}
+        swck-java-agent-injected: "true"
+      annotations:
+        sidecar.istio.io/inject: "false"
+        strategy.skywalking.apache.org/inject.Container: {{ .app.name }}
+        strategy.skywalking.apache.org/agent.Overlay: "true"
+        agent.skywalking.apache.org/agent.service_name: "agent::{{ .app.name }}"
+        sidecar.skywalking.apache.org/initcontainer.Image: "harbor.zulong.com/keel-images/skywalking-java:81afeddd084d614c1cfcbcc7c24d0238e9aaab25-java8"
+{{- end }}
     spec:
       affinity:
         podAntiAffinity:
@@ -68,6 +77,10 @@ spec:
 {{- if .app.javaOpts}}
           - name: JAVA_OPTS
             value: {{ .app.javaOpts }}
+{{- end }}
+{{- if and .app.skywalking .app.skywalking.enabled }}
+          - name: SW_AGENT_COLLECTOR_BACKEND_SERVICES
+            value: demo-satellite.sky:11800
 {{- end }}
 {{- if .app.resources }}
           resources:
